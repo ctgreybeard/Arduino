@@ -1,17 +1,45 @@
 # Breathe
 
+## A simple "I'm still alive" indicator
+
+Add the FastLED (https://github.com/FastLED/FastLED.git) and this Breathe library
+to the Arduino app then include it in your code.
+
+A sample app is shown below ...
+
+
+    #include "breathe.h"
+
+    Breathe b = Breathe();
+
+    void setup() {
+      Serial.begin(57600);
+      Serial.println("Hello, world!");
+    }
+
+    void loop() {
+      b.breathe(millis());
+    }
+
+## Discussion
+
 I wanted to make something that would let me see that the sketch was actually running
 and hadn't crashed.
-I wanted something that could be easily added and wouldn't take up
+I also wanted something that could be easily added and wouldn't take up
 too much time in the main loop.
 This is the result.
 
 I use the FastLED library because:
 
-1. I will probably be using it any way
+1. I will probably be using it anyway
 1. It has a fast pulse width routine that produces a sinosoidal waveform. Breathing is, after all, sinosoidal.
 
-This is a very simple routine; at every loop cycle it bumps the counter and consults with the waveform generators.
+Having said that I actually went with the "quad" waveform as it's slightly more obvious that it's breathing.
+YMMV and you are free to experiment.
+I have left the different codes in for most of the available waveforms.
+
+This is a very simple routine; at every loop cycle it checks the time, we only do the computation once every millisecond.
+Then the high/low pulse is calculated and sent to the LED if it has changed from the last.
 
 `beatsin8(CPM, DIM, BRT)` returns a uint8_t that varies sinosidally between the DIM and BRT
 parameters with a cycle time of (in this case) `CPM` per minute.
